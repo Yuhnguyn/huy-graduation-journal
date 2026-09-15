@@ -1,0 +1,18 @@
+{
+  "name": "huy-graduation-journal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "latest",
+    "three": "latest"
+  },
+  "devDependencies": {
+    "vite": "latest"
+  }
+}

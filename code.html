@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+
+<html class="h-full scroll-smooth" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thiệp Tốt Nghiệp Huy Nguyễn - PTIT 2026</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&amp;family=Caveat:wght@600;700&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet"/>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            leather: {
+              light: '#c68b59',
+              base: '#8d5029',
+              mid: '#6f3b1b',
+              dark: '#4f2711',
+              deep: '#2f1508',
+            },
+            ptit: {
+              green: '#40513B',
+              greenDark: '#2D3A29',
+              orange: '#D35400',
+              red: '#C0392B',
+              cream: '#FEF9E7',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+            cinzel: ['"Cinzel"', 'serif'],
+            handwriting: ['"Caveat"', 'cursive'],
+            typewriter: ['"Special Elite"', 'monospace'],
+          },
+          boxShadow: {
+            'book-closed': '0 32px 70px -15px rgba(0, 0, 0, 0.85), 0 20px 40px -20px rgba(0, 0, 0, 0.7), inset 3px 0 10px rgba(255,255,255,0.12), inset -4px -4px 14px rgba(0,0,0,0.6)',
+            'book-open': '0 35px 80px -15px rgba(0, 0, 0, 0.85), 0 22px 36px -18px rgba(0,0,0,0.7)',
+            'gate-left': '8px 0 24px -4px rgba(0, 0, 0, 0.85), inset -3px 0 8px rgba(0,0,0,0.5)',
+            'gate-right': '-8px 0 24px -4px rgba(0, 0, 0, 0.85), inset 3px 0 8px rgba(0,0,0,0.5)',
+            'paper-lift': '0 10px 24px -5px rgba(45, 30, 20, 0.3), 0 4px 8px rgba(0,0,0,0.1)',
+            'clip': '0 4px 8px rgba(0,0,0,0.4)',
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Wood texture background simulation */
+    .wood-desk {
+      background-color: #241815;
+      background-image: 
+        radial-gradient(ellipse at 50% 30%, rgba(210, 140, 80, 0.16) 0%, rgba(12, 8, 6, 0.95) 100%),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 2px, transparent 2px, transparent 8px),
+        linear-gradient(to bottom, #342116, #20140e 50%, #120905 100%);
+      background-attachment: fixed;
+    }
+
+    /* Leather Texture - matched to Traveler's Notebook Brown */
+    .leather-texture {
+      background-color: #7b4624;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.14) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0,0,0,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse at center, rgba(142, 82, 43, 0.95) 0%, #46220e 100%);
+    }
+
+    /* Lined Paper Pattern */
+    .lined-paper {
+      background-color: #fcf9f2;
+      background-image: 
+        linear-gradient(#ede1cc 1px, transparent 1px),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 25px, #e4d6be 26px);
+    }
+
+    /* Cutout Ransom Letter styling */
+    .letter-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      text-transform: lowercase;
+      box-shadow: 2px 3px 6px rgba(0,0,0,0.28);
+      transform-origin: center;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .letter-badge:hover {
+      transform: scale(1.22) rotate(var(--hover-deg, 5deg)) !important;
+      z-index: 10;
+    }
+
+    /* 3D Gatefold Book Engine */
+    .book-perspective {
+      perspective: 2200px;
+      perspective-origin: 50% 50%;
+      transform-style: preserve-3d;
+    }
+
+    .book-root {
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .gate-flipper-left {
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+
+    .gate-flipper-right {
+      transform-origin: right center;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Map hover interaction */
+    .map-zone {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .map-zone:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.12);
+      box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.35);
+    }
+
+    .campus-map-svg .map-zone {
+      transform-box: fill-box;
+      transform-origin: center;
+      outline: none;
+    }
+
+    .campus-map-svg .map-zone:focus-visible {
+      filter: brightness(1.14) drop-shadow(0 0 5px rgba(211, 84, 0, 0.85));
+    }
+
+    .campus-map-svg text {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Pulse animation */
+    @keyframes pulse-pin {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 6px rgba(220, 38, 38, 0.4)); }
+      50% { transform: scale(1.18) translateY(-4px); filter: drop-shadow(0 12px 14px rgba(220, 38, 38, 0.65)); }
+    }
+    .animate-bounce-pin {
+      animation: pulse-pin 2s ease-in-out infinite;
+    }
+
+    /* Sunlight beam effect */
+    .sunbeam {
+      background: linear-gradient(135deg, rgba(255,255,240,0.09) 0%, rgba(255,240,210,0.02) 40%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(211,84,0,0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(211,84,0,0.8);
+    }
+  </style>
+</head>
+<body class="wood-desk text-stone-800 antialiased selection:bg-amber-800 selection:text-white relative">
+<!-- Sunlight overlay -->
+<div class="fixed inset-0 sunbeam z-20 pointer-events-none"></div>
+<!-- Ambient Topbar Controls (Fixed at top) -->
+<header class="fixed top-0 left-0 right-0 pt-4 pb-2 px-4 sm:px-8 flex justify-between items-center z-40 max-w-7xl mx-auto text-stone-300">
+<div class="flex items-center space-x-3 bg-stone-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-stone-700/60 shadow-lg">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+<span class="text-xs font-mono tracking-wide text-amber-200">PTIT • HUY NGUYỄN 2026</span>
+</div>
+<!-- Quick controls -->
+<div class="flex items-center space-x-2 sm:space-x-3">
+<button class="flex items-center space-x-1.5 text-xs font-medium text-stone-300 bg-stone-900/80 hover:bg-stone-800 backdrop-blur-md px-3 py-1.5 rounded-full border border-stone-700/60 shadow-md transition-all" id="toggleSoundBtn">
+<svg aria-hidden="true" class="lucide lucide-volume-2 w-3.5 h-3.5 text-amber-400" data-lucide="volume-2" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"></path><path d="M16 9a5 5 0 0 1 0 6"></path><path d="M19.364 18.364a9 9 0 0 0 0-12.728"></path></svg>
+<span class="hidden sm:inline" id="soundText">Âm thanh: Bật</span>
+</button>
+<button class="flex items-center space-x-1.5 text-xs font-medium text-amber-300 bg-amber-950/80 hover:bg-amber-900/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-amber-800/60 shadow-md transition-all" id="resetBookBtn">
+<svg aria-hidden="true" class="lucide lucide-book-open w-3.5 h-3.5 text-amber-400" data-lucide="book-open" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5v16"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path></svg>
+<span id="btnToggleLabel">Mở sổ thiệp 3D</span>
+</button>
+<button class="flex items-center space-x-1.5 text-xs font-semibold text-white bg-ptit-orange hover:bg-orange-600 px-3.5 py-1.5 rounded-full shadow-lg shadow-orange-900/40 transition-transform active:scale-95" id="celebrateBtn">
+<svg aria-hidden="true" class="lucide lucide-sparkles w-3.5 h-3.5" data-lucide="sparkles" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>
+<span>Pháo Hoa</span>
+</button>
+</div>
+</header>
+<!-- Coffee Cup Desk Prop -->
+<div class="fixed top-16 left-8 pointer-events-none opacity-40 lg:opacity-70 hidden xl:block z-10 transition-transform hover:scale-105 duration-500">
+<div class="w-24 h-24 rounded-full border-4 border-amber-950/50 bg-gradient-to-tr from-amber-950/80 to-amber-900/60 shadow-2xl flex items-center justify-center relative">
+<div class="w-18 h-18 rounded-full bg-[#1e140d] border-2 border-stone-800 shadow-inner flex items-center justify-center p-3">
+<div class="w-12 h-12 rounded-full bg-[#3c2415] opacity-90"></div>
+</div>
+<div class="absolute -right-3 top-6 w-5 h-10 border-4 border-amber-950/50 rounded-r-xl"></div>
+<span class="absolute -bottom-5 text-[9px] tracking-widest text-stone-400 font-mono">CAFE CAPPUCCINO</span>
+</div>
+</div>
+<!-- FIXED VIEWPORT OVERLAY FOR GATEFOLD BOOK CONTAINER: Locked at center -->
+<div class="fixed inset-0 flex flex-col justify-between items-center px-3 sm:px-6 pt-16 pb-4 pointer-events-none z-20 overflow-hidden">
+<!-- Top Instruction Pill & Scroll Progress Bar -->
+<div class="flex flex-col items-center gap-1.5 pointer-events-auto">
+<div class="cursor-pointer bg-stone-900/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-stone-700/60 shadow-md flex items-center gap-2" id="statusInstruction">
+<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+<span class="text-xs sm:text-sm font-medium text-amber-200" id="instructionText">Cuộn xuống hoặc nhấn vào sổ để mở thiệp 3D</span>
+</div>
+<!-- Mini Progress Indicator with percentage -->
+<div class="flex items-center gap-2">
+<div class="w-40 sm:w-56 h-1.5 bg-stone-900/80 rounded-full overflow-hidden border border-stone-700/50 shadow-inner">
+<div class="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-ptit-orange w-0 transition-all duration-75" id="progressBar" style="width: 0%;"></div>
+</div>
+<span class="text-[10px] font-mono text-amber-300 font-bold" id="progressPercent">0%</span>
+</div>
+</div>
+<!-- 3D BOOK STAGE (Centered in viewport) -->
+<div class="relative w-full flex-1 flex items-center justify-center book-perspective pointer-events-none">
+<!-- BOOK WRAPPER CONTAINER -->
+<div class="book-root relative pointer-events-auto cursor-pointer select-none" id="bookContainer" style="width: min(94vw, 1040px); height: min(78vh, 630px); transform: rotateX(0deg) rotateY(0deg) scale(1);">
+<!-- UNDERNEATH LAYER: INSIDE SPREAD (Completely hidden when closed, revealed as gate flaps swing open) -->
+<div class="absolute inset-0 w-full h-full rounded-2xl leather-texture shadow-book-open border-4 border-amber-950/90 p-2.5 sm:p-4 flex flex-col md:flex-row gap-2.5 md:gap-4 justify-between overflow-hidden" id="spreadInside">
+<!-- Spine Gutter Shadow in Center -->
+<div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-12 -translate-x-1/2 bg-gradient-to-r from-stone-950/80 via-black/95 to-stone-950/80 z-20 pointer-events-none transition-opacity duration-300" id="spineGutterShadow" style="opacity: 0.35;"></div>
+<div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-stone-950 z-20"></div>
+<!-- LEFT PAGE: VINTAGE SCRAPBOOK INVITATION WITH CHIBI HUY NGUYEN -->
+<div class="flex-1 rounded-xl bg-[#f7eedf] border border-amber-300/60 shadow-paper-lift p-3.5 sm:p-5 flex flex-col justify-between relative overflow-y-auto overflow-x-hidden">
+<!-- Sunburst Background Watermark -->
+<div class="absolute inset-0 opacity-15 pointer-events-none" style="background: repeating-conic-gradient(rgb(211, 84, 0) 0deg, rgb(211, 84, 0) 15deg, transparent 15deg, transparent 30deg);"></div>
+<!-- Top Silver Paperclip -->
+<div class="absolute top-1.5 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+<div class="w-9 h-9 rounded-full border-4 border-stone-400 shadow-md bg-stone-300/90 flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-stone-700 rounded-full"></div>
+</div>
+</div>
+<!-- SECTION: Ransom Cutout Letters G-R-A-D-U-A-T-E-S -->
+<div class="relative pt-2 text-center mb-1">
+<div class="inline-flex flex-wrap justify-center gap-1 sm:gap-1.5">
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-teal-800 text-white font-cinzel rounded-sm -rotate-4" style="--hover-deg: -8deg;">g</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-ptit-orange text-white font-serif rounded-sm rotate-3" style="--hover-deg: 8deg;">r</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-emerald-700 text-amber-50 font-serif rounded-sm -rotate-3" style="--hover-deg: -6deg;">a</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-amber-600 text-stone-900 font-cinzel rounded-sm rotate-6" style="--hover-deg: 12deg;">d</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-pink-800 text-white font-serif rounded-sm -rotate-2" style="--hover-deg: -8deg;">u</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-purple-900 text-amber-100 font-cinzel rounded-sm rotate-4" style="--hover-deg: 10deg;">a</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-teal-800 text-white font-serif rounded-sm -rotate-4" style="--hover-deg: -10deg;">t</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-amber-800 text-amber-100 font-cinzel rounded-sm rotate-3" style="--hover-deg: 7deg;">e</span>
+<span class="letter-badge px-2 sm:px-2.5 py-0.5 sm:py-1 text-xl sm:text-2xl bg-stone-900 text-yellow-400 font-cinzel rounded-sm -rotate-3" style="--hover-deg: -6deg;">s</span>
+</div>
+</div>
+<!-- Main Invitation Body: Left Chibi Avatar + Right Notepaper Card -->
+<div class="relative flex-1 flex flex-col sm:flex-row items-center justify-between gap-2.5 my-auto z-10">
+<!-- Left: Huy Nguyen Mascot Avatar with Cap https://lh3.googleusercontent.com/aida-public/AB6AXuBU0GXefWYyYWwEFurxav9PiuPLFmVSH-CUDqetLA8a-0M-9NaZcRlacBA9DvQ6JJKEZe9G9iLJa80K6VhiHYeBf1MeD0-SaJgOO5mK8OAYhB43SA6Yo14wM8y3MhzHp9mc12pEXtDVp0eBQtMNvmAPw63fEK64Jt8S2kAweyHXXQY1wnlae111mGiYuz3Z-cwmcfndk3qr46At6TRJth9oq61EkASB7HRx4UKsxpXwLxgSOYidGvxD9CETl-DV5BuhHw -->
+<div class="flex flex-col items-center justify-center flex-shrink-0 relative group">
+<div class="relative w-28 sm:w-36 md:w-44 drop-shadow-xl transition-transform hover:scale-105 duration-300">
+<img alt="Huy Nguyễn Chibi Tốt Nghiệp" class="w-28 sm:w-36 md:w-44 h-auto object-contain drop-shadow-md z-10 select-none pointer-events-none rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2n5kintlQqD6f8Sfqy5bLNVPqgpQulFWIGrPg9RMdRCZvRMVVymg0-W80uKA4SDQbOQk0lk-x_d45nwZ1FkiLNcuJWLa20gdMH8MBNSGEzvCmIiq9K04abbmQGcHm_ADD6xJNZQv21JbPcNj_awvytMTeEmY4W9rzyMzEgtJcvRP8R1qRDdopTxxumkPcw6Wo7tRU4J_3SQBk3Pae6_nh1XmIoC2LVWth-hkKNOBLPDaBFMbRIwjHwuU5lX3M4pOMiw"/>
+</div>
+</div>
+<!-- Right: Lined Paper Invitation Card -->
+<div class="flex-1 w-full bg-white/95 rounded-lg border border-stone-300 shadow-sm p-3 sm:p-3.5 relative flex flex-col justify-between">
+<!-- Notepaper Perforated Holes -->
+<div class="absolute top-2 bottom-2 right-1.5 flex flex-col justify-around pointer-events-none opacity-40">
+<div class="w-1.5 h-1.5 rounded-full bg-stone-400"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-stone-400"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-stone-400"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-stone-400"></div>
+</div>
+<div class="text-center">
+<div class="flex items-center justify-center gap-1.5 text-ptit-red font-black tracking-wider text-base sm:text-lg font-sans">
+<span>THÂN MỜI</span>
+<svg aria-hidden="true" class="lucide lucide-sparkle w-3.5 h-3.5 text-amber-500" data-lucide="sparkle" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path></svg>
+</div>
+<div class="my-0.5">
+<span class="font-handwriting text-2xl sm:text-3xl text-stone-800 font-bold underline decoration-wavy decoration-amber-400">Tên Bạn</span>
+</div>
+<p class="text-[11px] text-stone-700 font-medium">Đến tham dự lễ tốt nghiệp của <strong class="text-stone-900 font-bold">Huy</strong></p>
+</div>
+<!-- Time & Location Cards -->
+<div class="mt-2 pt-2 border-t border-dashed border-stone-300 grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-stone-800">
+<!-- Time Column -->
+<div class="bg-amber-50/80 p-1.5 rounded border border-amber-200 text-center">
+<div class="flex items-center justify-center gap-1 text-ptit-green font-bold text-[10px] uppercase tracking-wider">
+<svg aria-hidden="true" class="lucide lucide-clock w-3 h-3" data-lucide="clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+<span>THỜI GIAN</span>
+</div>
+<div class="font-bold text-stone-900 text-xs mt-0.5 font-typewriter">11:30 – 17:00</div>
+<div class="font-black text-ptit-orange text-sm sm:text-base tracking-tight font-cinzel">26.09.2026</div>
+</div>
+<!-- Location Column -->
+<div class="bg-amber-50/80 p-1.5 rounded border border-amber-200 text-center">
+<div class="flex items-center justify-center gap-1 text-ptit-green font-bold text-[10px] uppercase tracking-wider">
+<svg aria-hidden="true" class="lucide lucide-map-pin w-3 h-3" data-lucide="map-pin" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+<span>ĐỊA ĐIỂM</span>
+</div>
+<div class="font-bold text-stone-900 text-[10px] sm:text-[11px] mt-0.5 leading-snug uppercase">HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</div>
+<div class="text-[9px] text-stone-600 mt-0.5 leading-tight">Số 96A Trần Phú (Km10 đường Nguyễn Trãi), P. Hà Đông, Hà Nội</div>
+</div>
+</div>
+<!-- Greeting Action Button -->
+<div class="mt-2 pt-1.5 flex justify-end">
+<button class="px-2.5 py-1 bg-ptit-green hover:bg-emerald-900 text-white text-[10px] sm:text-[11px] font-semibold rounded shadow transition-all active:scale-95 flex items-center gap-1" onclick="triggerGreetingModal()">
+<svg aria-hidden="true" class="lucide lucide-heart-handshake w-3 h-3 text-amber-300" data-lucide="heart-handshake" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19.414 14.414C21 12.828 22 11.5 22 9.5a5.5 5.5 0 0 0-9.591-3.676.6.6 0 0 1-.818.001A5.5 5.5 0 0 0 2 9.5c0 2.3 1.5 4 3 5.5l5.535 5.362a2 2 0 0 0 2.879.052 2.12 2.12 0 0 0-.004-3 2.124 2.124 0 1 0 3-3 2.124 2.124 0 0 0 3.004 0 2 2 0 0 0 0-2.828l-1.881-1.882a2.41 2.41 0 0 0-3.409 0l-1.71 1.71a2 2 0 0 1-2.828 0 2 2 0 0 1 0-2.828l2.823-2.762"></path></svg>
+<span>Gửi lời chúc</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Note -->
+<div class="text-center mt-1">
+<span class="text-[10px] sm:text-[11px] text-stone-600 italic">"Sự hiện diện của bạn là niềm vui và vinh dự lớn nhất của Huy!"</span>
+</div>
+</div>
+<!-- RIGHT PAGE: INTERACTIVE PTIT CAMPUS MAP (Matching https://lh3.googleusercontent.com/aida-public/AB6AXuCBHC3ejkBFStENHhmrvZ5SgPYVroOBq4L2QRJxCcY6HR0wyXQZTawMT8XwmhlrvAwgvX1IUUcaalpJhmjqeRCWHtQVG4xK4GmjDcJbqTbeih3OPsnN24dXhwGQIAT6GSWGlHr3i31XPhWXMPiizMCz5Z07Hb5hm-sDw591bGYZ5Ko-mt481Sy6tZSnG1yKfKx_9SWbqhj27gpwjhCFG3pT678YAPrv4A806tUi0673n_CzIEiallB5_E6WEOIQn_dfCw) -->
+<div class="flex-1 rounded-xl lined-paper border border-amber-300/60 shadow-paper-lift p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden">
+<!-- Header for Campus Map -->
+<div class="flex justify-between items-center pb-1.5 border-b border-stone-300/80">
+<div>
+<h3 class="font-bold text-sm sm:text-base text-stone-900 flex items-center gap-1.5 font-sans">
+<svg aria-hidden="true" class="lucide lucide-compass w-4 h-4 text-ptit-green" data-lucide="compass" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"></path></svg>
+<span>Bản đồ trường PTIT</span>
+</h3>
+<p class="text-[10px] text-stone-500">Chạm hoặc rê chuột vào các khu vực để xem chi tiết</p>
+</div>
+<div class="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-stone-800 text-[11px] font-medium shadow-xs" id="activeZoneBadge">
+<span class="w-1.5 h-1.5 rounded-full bg-ptit-orange animate-pulse"></span>
+<span id="zoneBadgeText">Đang xem: Hội trường nhà A2</span>
+</div>
+</div>
+<!-- MAP SCHEMATIC VIEW: vector redraw from the supplied PTIT reference -->
+<div class="my-1.5 bg-[#fffced] border-2 border-stone-300/80 rounded-lg p-1.5 shadow-inner relative flex-1 min-h-[285px] overflow-hidden">
+<svg aria-labelledby="campusMapTitle campusMapDesc" class="campus-map-svg block w-full h-full min-h-[275px]" role="img" viewBox="0 0 560 455" xmlns="http://www.w3.org/2000/svg">
+<title id="campusMapTitle">Sơ đồ khuôn viên PTIT</title>
+<desc id="campusMapDesc">Sơ đồ các tòa nhà trong khuôn viên PTIT, làm nổi bật Hội trường nhà A2.</desc>
+<defs>
+<filter height="150%" id="mapShadow" width="150%" x="-25%" y="-25%">
+<feDropShadow dx="0" dy="4" flood-color="#2f1508" flood-opacity="0.18" stdDeviation="4"/>
+</filter>
+<filter height="180%" id="targetGlow" width="180%" x="-40%" y="-40%">
+<feDropShadow dx="0" dy="5" flood-color="#c0392b" flood-opacity="0.42" stdDeviation="7"/>
+</filter>
+<pattern height="18" id="paperGrain" patternUnits="userSpaceOnUse" width="18">
+<circle cx="3" cy="5" fill="#8d744f" opacity="0.05" r="0.7"/>
+<circle cx="14" cy="12" fill="#8d744f" opacity="0.04" r="0.55"/>
+</pattern>
+</defs>
+<rect fill="#fffced" height="455" rx="12" width="560"/>
+<rect fill="url(#paperGrain)" height="455" rx="12" width="560"/>
+
+<g class="map-zone" data-desc="Khu Ký túc xá sinh viên B1" data-title="KTX B1" role="button" tabindex="0">
+<rect fill="#536a48" height="38" rx="4" width="116" x="12" y="18"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="600" text-anchor="middle" x="70" y="42">KTX B1</text>
+</g>
+<g class="map-zone" data-desc="Phòng thực hành máy tính và phòng lab viễn thông" data-title="Khu thí nghiệm &amp; thực hành" role="button" tabindex="0">
+<rect fill="#536a48" height="27" rx="4" width="314" x="178" y="18"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="500" text-anchor="middle" x="335" y="36">Khu thí nghiệm &amp; thực hành</text>
+</g>
+<g class="map-zone" data-desc="Khu Ký túc xá sinh viên B5" data-title="KTX B5" role="button" tabindex="0">
+<rect fill="#536a48" height="38" rx="4" width="116" x="12" y="78"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="600" text-anchor="middle" x="70" y="102">KTX B5</text>
+</g>
+<g class="map-zone" data-desc="Khu vực căng tin và giải khát" data-title="Canteen PTIT" role="button" tabindex="0">
+<rect fill="#536a48" height="75" rx="5" width="184" x="178" y="58"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="17" font-weight="600" text-anchor="middle" x="270" y="101">Canteen</text>
+</g>
+<g class="map-zone" data-desc="Khu giảng đường B15" data-title="Nhà B15" role="button" tabindex="0">
+<rect fill="#536a48" height="75" rx="5" width="45" x="371" y="58"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle" transform="rotate(-90 394 96)" x="394" y="100">Nhà B15</text>
+</g>
+<g class="map-zone" data-desc="Hội trường lớn số 1 PTIT" data-title="Hội trường 1" role="button" tabindex="0">
+<rect fill="#536a48" height="68" rx="5" width="116" x="12" y="153"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="600" text-anchor="middle" x="70" y="192">Hội trường 1</text>
+</g>
+<g class="map-zone" data-desc="Giảng đường các viện đào tạo" data-title="Nhà A3" role="button" tabindex="0">
+<rect fill="#536a48" height="57" rx="5" width="178" x="371" y="143"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="15" font-weight="600" text-anchor="middle" x="460" y="177">Nhà A3</text>
+</g>
+<g class="map-zone" data-desc="Bãi gửi xe học viện dành cho khách mời" data-title="Nhà để xe" role="button" tabindex="0">
+<rect fill="#536a48" height="55" rx="5" width="116" x="12" y="235"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="600" text-anchor="middle" x="70" y="268">Nhà để xe</text>
+</g>
+<text fill="#a65f2a" font-family="Caveat, cursive" font-size="16" font-weight="700" x="12" y="318">Vườn thanh niên</text>
+
+<g class="map-zone" data-desc="Địa điểm chính: Nhận bằng, trao hoa và chụp ảnh lưu niệm cùng Huy!" data-title="Hội trường nhà A2" filter="url(#targetGlow)" id="targetHoiTruongA2" role="button" tabindex="0">
+<rect fill="#cf651c" height="91" rx="6" width="193" x="178" y="213"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="18" font-weight="800" text-anchor="middle" x="274" y="253">Hội trường</text>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="18" font-weight="800" text-anchor="middle" x="274" y="278">nhà A2</text>
+</g>
+<g class="map-zone" data-desc="Tòa nhà hành chính A2" data-title="Nhà A2" role="button" tabindex="0">
+<rect fill="#536a48" height="91" rx="6" width="178" x="371" y="213"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="600" text-anchor="middle" x="460" y="265">Nhà A2</text>
+</g>
+
+<path d="M430 218 C410 196 376 190 341 204 C320 212 306 220 288 225" fill="none" marker-end="url(#arrowHead)" stroke="#c0392b" stroke-dasharray="7 7" stroke-linecap="round" stroke-width="4"/>
+<defs>
+<marker id="arrowHead" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4">
+<path d="M0 0 L8 4 L0 8 Z" fill="#c0392b"/>
+</marker>
+</defs>
+<g filter="url(#mapShadow)" pointer-events="none">
+<rect fill="#c0392b" height="27" rx="13.5" width="116" x="414" y="185"/>
+<circle cx="430" cy="198.5" fill="#fff9e7" r="5"/>
+<text fill="#ffffff" font-family="Plus Jakarta Sans, sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="478" y="202">Tui ở đây nha</text>
+</g>
+
+<g class="map-zone" data-desc="Tòa nhà thư viện và hội thảo trung tâm" data-title="Nhà A1" role="button" tabindex="0">
+<rect fill="#536a48" height="52" rx="5" width="292" x="12" y="337"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="15" font-weight="600" text-anchor="middle" x="158" y="368">Nhà A1</text>
+</g>
+<rect fill="#6f875f" height="28" rx="4" width="230" x="72" y="398"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="600" text-anchor="middle" x="187" y="417">Vườn hoa</text>
+<g class="map-zone" data-desc="Phòng thường trực bảo vệ" data-title="Bảo vệ" role="button" tabindex="0">
+<rect fill="#536a48" height="27" rx="4" width="98" x="204" y="430"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="12" font-weight="600" text-anchor="middle" x="253" y="448">Bảo vệ</text>
+</g>
+<g class="map-zone" data-desc="Hỗ trợ thông tin học vụ" data-title="Văn phòng một cửa" role="button" tabindex="0">
+<rect fill="#536a48" height="74" rx="5" width="128" x="421" y="350"/>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="600" text-anchor="middle" x="485" y="383">Văn phòng</text>
+<text fill="#fff9e7" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="600" text-anchor="middle" x="485" y="401">một cửa</text>
+</g>
+<rect fill="#536a48" height="14" rx="4" width="100" x="318" y="438"/>
+<text fill="#b7652d" font-family="Caveat, cursive" font-size="17" font-weight="700" text-anchor="middle" x="368" y="432">Cổng</text>
+</svg>
+<!-- Interactive Floating Info Box -->
+<div class="absolute bottom-1.5 left-1.5 right-1.5 bg-stone-900/90 backdrop-blur-md text-white p-2 sm:p-2.5 rounded-lg border border-amber-500/40 shadow-xl flex items-start justify-between" id="zoneInfoCard">
+<div>
+<div class="flex items-center gap-1 text-amber-400 font-bold text-xs">
+<svg aria-hidden="true" class="lucide lucide-check-circle w-3.5 h-3.5 text-emerald-400" data-lucide="check-circle" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
+<span id="infoTitle">Hội trường nhà A2</span>
+</div>
+<p class="text-[10px] sm:text-xs text-stone-200 mt-0.5 leading-snug" id="infoDesc">Địa điểm chính: Nhận bằng tốt nghiệp, chụp ảnh kỷ niệm &amp; dự tiệc ngọt cùng Huy.</p>
+</div>
+<button class="ml-2 px-2 py-1 bg-ptit-orange hover:bg-orange-600 text-white text-[10px] font-semibold rounded shadow flex items-center gap-1 flex-shrink-0" id="directMeBtn">
+<svg aria-hidden="true" class="lucide lucide-navigation w-2.5 h-2.5" data-lucide="navigation" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+<span>Chỉ đường</span>
+</button>
+</div>
+</div>
+<!-- Bottom Controls on Map Page -->
+<div class="pt-1.5 flex justify-between items-center text-xs">
+<button class="flex items-center gap-1 text-[11px] text-stone-600 hover:text-stone-900 font-medium px-2.5 py-1 rounded hover:bg-stone-200 transition-all" id="foldBookBtn">
+<svg aria-hidden="true" class="lucide lucide-chevron-up w-3.5 h-3.5" data-lucide="chevron-up" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m18 15-6-6-6 6"></path></svg>
+<span>Cuộn lên để đóng sổ</span>
+</button>
+<a class="text-[11px] text-ptit-orange hover:underline font-semibold flex items-center gap-1" href="https://maps.google.com/?q=H%E1%BB%8Dc+vi%E1%BB%87n+C%C3%B4ng+ngh%E1%BB%87+B%C6%B0u+ch%C3%ADnh+Vi%E1%BB%85n+th%C3%B4ng" rel="noopener noreferrer" target="_blank">
+<span>Google Maps</span>
+<svg aria-hidden="true" class="lucide lucide-external-link w-3 h-3" data-lucide="external-link" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+</a>
+</div>
+</div>
+</div>
+<!-- ========================================================= -->
+<!-- 3D GATEFOLD COVERS LAYER (100% Covers book when progress=0) -->
+<!-- ========================================================= -->
+<!-- LEFT GATE FLAP: Opens rotating around LEFT spine edge (-180deg) -->
+<div class="gate-flipper-left absolute top-0 bottom-0 left-0 w-1/2 rounded-l-2xl leather-texture shadow-gate-left border-l-8 border-y-4 border-r border-stone-950 border-r-amber-950/60 p-4 sm:p-6 flex flex-col justify-between overflow-hidden z-30 backface-hidden" id="leftGateFlap" style="transform: rotateY(0deg);">
+<!-- Leather Edge Shading & Stitching -->
+<div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/80 via-black/30 to-transparent pointer-events-none"></div>
+<div class="absolute left-6 top-0 bottom-0 border-l-2 border-dashed border-amber-300/30 pointer-events-none"></div>
+<div class="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black/60 to-transparent pointer-events-none"></div>
+<!-- Top Left Leather Emboss Brand -->
+<div class="relative z-10 pt-2 sm:pt-4 pl-2 sm:pl-4">
+<div class="inline-flex items-center gap-1.5 border border-amber-400/40 px-3 py-1 rounded bg-black/30 backdrop-blur-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<p class="text-[9px] sm:text-[11px] font-mono tracking-[0.25em] text-amber-200/90 uppercase font-semibold">TRAVELER'S NOTEBOOK</p>
+</div>
+<h2 class="mt-3 sm:mt-5 font-serif text-2xl sm:text-4xl text-amber-100 font-bold tracking-wide drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+        Huy Nguyễn
+      </h2>
+<p class="font-handwriting text-xl sm:text-2xl text-amber-300/90 mt-1">Lễ Tốt Nghiệp PTIT</p>
+</div>
+<!-- Center Left Seal Icon -->
+<div class="relative z-10 self-center my-auto text-center">
+<div class="w-16 sm:w-20 h-16 sm:h-20 rounded-full border-2 border-dashed border-amber-300/40 flex items-center justify-center mx-auto mb-2 bg-black/25 shadow-inner">
+<svg aria-hidden="true" class="lucide lucide-graduation-cap w-8 sm:w-10 h-8 sm:h-10 text-amber-200/80" data-lucide="graduation-cap" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg>
+</div>
+<span class="text-[9px] sm:text-[10px] text-amber-200/70 uppercase tracking-widest font-mono">PTIT CLASS OF 2026</span>
+</div>
+<!-- Bottom Left Leather Label -->
+<div class="relative z-10 pb-2 pl-2 sm:pl-4">
+<div class="inline-block bg-[#3a1d0d] px-2.5 py-1 rounded border border-amber-900 shadow-inner">
+<span class="text-[9px] sm:text-[10px] text-amber-400 font-mono tracking-wider">THIỆP MỜI TRANG TRỌNG</span>
+</div>
+</div>
+<!-- Dynamic shadow overlay on left flap as it opens -->
+<div class="absolute inset-0 bg-black/0 pointer-events-none transition-colors duration-150" id="leftFlapShadow"></div>
+</div>
+<!-- RIGHT GATE FLAP: Opens rotating around RIGHT spine edge (+180deg) -->
+<div class="gate-flipper-right absolute top-0 bottom-0 right-0 w-1/2 rounded-r-2xl leather-texture shadow-gate-right border-r-8 border-y-4 border-l border-stone-950 border-l-amber-950/60 p-4 sm:p-6 flex flex-col justify-between overflow-hidden z-30 backface-hidden" id="rightGateFlap" style="transform: rotateY(0deg);">
+<!-- Leather Edge Shading & Stitching -->
+<div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/80 via-black/30 to-transparent pointer-events-none"></div>
+<div class="absolute right-6 top-0 bottom-0 border-r-2 border-dashed border-amber-300/30 pointer-events-none"></div>
+<div class="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-black/60 to-transparent pointer-events-none"></div>
+<!-- Peeking Invitation Card Top-Right (Similar to Traveler's Notebook style https://lh3.googleusercontent.com/aida-public/AB6AXuBYXewD8QbWXUvpbj-PHdnLVBsFXbON3a6sIKSlhpREo8VjvtbfzI9uh4D7XAe4HUWkm7Mh0CaDxw4-KctlFs275It2EoCI_ILAr5te2Q3ABnZtOJmrPhnVAI7gkQiAoLtrPO1FVkX7ss2Pjvx4WTAhjmjLBpe3iiQm-uvCCNJgCdhgVmZQAygSdVh06Ba1HxxJj9HmFPUpU2L-xd1-RkhduhG8MSLSEN_qy5HwGUgyYDbUTPblfK_wCKNuZEtRkDb1Mg) -->
+<div class="absolute -top-5 right-6 w-36 sm:w-44 h-28 bg-[#fdfaf3] rounded-b border-x border-b border-amber-300/80 shadow-md p-2 transform rotate-1 pointer-events-none z-10 flex flex-col justify-end">
+<div class="border-t border-dashed border-amber-400/80 pt-1 flex items-center justify-between">
+<span class="font-cinzel text-[10px] font-black text-ptit-orange tracking-wider uppercase">INVITATION</span>
+<span class="text-[8px] font-mono text-stone-500">26.09.2026</span>
+</div>
+</div>
+<!-- Top Right Emboss Brand -->
+<div class="relative z-10 pt-2 sm:pt-4 pr-2 sm:pr-4 text-right">
+<div class="inline-block border border-amber-400/40 px-3 py-1 rounded bg-black/30 backdrop-blur-xs">
+<p class="text-[9px] sm:text-[11px] font-mono tracking-[0.2em] text-amber-200/90 uppercase font-semibold">OFFICIAL INVITATION</p>
+</div>
+<h2 class="mt-3 sm:mt-5 font-serif text-2xl sm:text-4xl text-amber-100 font-bold tracking-wide drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+        PTIT 2026
+      </h2>
+<p class="font-handwriting text-xl sm:text-2xl text-amber-300/90 mt-1">Học Viện CN Bưu Chính Viễn Thông</p>
+</div>
+<!-- Center Right Gate Info -->
+<div class="relative z-10 self-center my-auto text-center">
+<div class="px-4 py-2 rounded-lg bg-black/30 border border-amber-400/30 backdrop-blur-xs max-w-[220px]">
+<div class="flex items-center justify-center gap-1.5 text-amber-300 text-xs font-bold font-sans">
+<svg aria-hidden="true" class="lucide lucide-map-pin w-3.5 h-3.5 text-ptit-orange" data-lucide="map-pin" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+<span>Hội Trường Nhà A2</span>
+</div>
+<p class="text-[10px] text-amber-100/75 mt-0.5 font-mono">96A Trần Phú, Hà Đông</p>
+</div>
+</div>
+<!-- Bottom Right CTA Click Area -->
+<div class="relative z-10 pb-2 pr-2 sm:pr-4 text-right">
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-ptit-orange text-stone-950 font-bold text-xs shadow-md">
+<span>Nhấp để mở sổ</span>
+<svg aria-hidden="true" class="lucide lucide-arrow-right w-3.5 h-3.5" data-lucide="arrow-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+</div>
+</div>
+<!-- Dynamic shadow overlay on right flap as it opens -->
+<div class="absolute inset-0 bg-black/0 pointer-events-none transition-colors duration-150" id="rightFlapShadow"></div>
+</div>
+<!-- CENTER SEAM SHADOW (Vertical seam where the 2 gate covers meet when closed) -->
+<div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 bg-gradient-to-r from-black/80 via-black/95 to-black/80 pointer-events-none z-40 transition-opacity duration-200" id="centerSeamShadow"></div>
+<!-- ELASTIC BAND STRAP ACROSS THE MIDDLE (Stretches & snaps away when opening) -->
+<div class="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-4 bg-[#572d15] border-y border-stone-950 shadow-[0_6px_14px_rgba(0,0,0,0.8)] flex items-center justify-center z-40 transition-all duration-300" id="elasticBand">
+<div class="w-full h-full bg-gradient-to-b from-[#7d411f] via-[#572d15] to-[#391b0c] opacity-90"></div>
+</div>
+<!-- BRASS METALLIC ROUND MEDALLION EMBLEM AT CENTER (Locking the 2 gates) -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 cursor-pointer transition-all duration-300" id="centerMedallion">
+<div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-amber-700 via-amber-300 to-yellow-500 p-1 shadow-[0_12px_28px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.8)] flex items-center justify-center border-2 border-amber-900 group hover:scale-105 transition-transform">
+<div class="w-full h-full rounded-full bg-gradient-to-b from-[#341b0e] to-[#1a0c05] border border-amber-400/70 flex flex-col items-center justify-center p-2 text-center shadow-inner relative overflow-hidden">
+<!-- Shine reflection on coin -->
+<div class="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent rounded-t-full pointer-events-none"></div>
+<svg aria-hidden="true" class="lucide lucide-award w-6 h-6 text-amber-300 drop-shadow-sm mb-0.5" data-lucide="award" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path></svg>
+<span class="text-[9px] sm:text-[10px] font-cinzel font-black text-amber-200 tracking-wider leading-none">HUY NGUYỄN</span>
+<span class="text-[8px] font-mono text-ptit-orange font-bold mt-0.5">PTIT • 2026</span>
+</div>
+</div>
+</div>
+<!-- Book outer edge paper thickness simulation -->
+<div class="absolute -right-2 top-3 bottom-3 w-2 bg-gradient-to-l from-stone-300 via-stone-200 to-stone-400 rounded-r shadow-md opacity-80 pointer-events-none"></div>
+<div class="absolute -left-2 top-3 bottom-3 w-2 bg-gradient-to-r from-stone-300 via-stone-200 to-stone-400 rounded-l shadow-md opacity-80 pointer-events-none"></div>
+</div>
+</div>
+<!-- Bottom Sticky Footer bar -->
+<footer class="w-full pt-2 flex flex-wrap justify-between items-center max-w-7xl mx-auto text-stone-400 text-xs font-mono pointer-events-auto">
+<span>© 2026 HUY NGUYỄN • PTIT GRADUATION</span>
+<span>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</span>
+</footer>
+</div>
+<!-- TALL SCROLL TRACK: 250vh scroll driver ensuring smooth progression -->
+<div class="relative w-full h-[250vh] pointer-events-none" id="scrollTrack"></div>
+<!-- Modal: Gửi Lời Chúc Mừng -->
+<div class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" id="greetingModal">
+<div class="bg-[#fefaf3] border-4 border-amber-900/70 rounded-2xl p-5 sm:p-6 max-w-md w-full shadow-2xl relative">
+<button class="absolute top-3 right-3 text-stone-400 hover:text-stone-700 p-1" onclick="closeGreetingModal()">
+<svg aria-hidden="true" class="lucide lucide-x w-5 h-5" data-lucide="x" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+</button>
+<div class="text-center mb-4">
+<div class="w-11 h-11 rounded-full bg-amber-100 border border-amber-300 text-ptit-orange flex items-center justify-center mx-auto mb-2">
+<svg aria-hidden="true" class="lucide lucide-send w-5 h-5" data-lucide="send" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path><path d="m21.854 2.147-10.94 10.939"></path></svg>
+</div>
+<h3 class="font-serif text-2xl font-bold text-stone-900">Gửi lời chúc tới Huy</h3>
+<p class="text-xs text-stone-600 mt-1">Lời chúc của bạn sẽ được lưu giữ trong sổ kỷ yếu tốt nghiệp!</p>
+</div>
+<form class="space-y-3" id="greetingForm" onsubmit="handleSendGreeting(event)">
+<div>
+<label class="block text-xs font-semibold text-stone-700 mb-1">Tên của bạn:</label>
+<input class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-ptit-orange bg-white" id="senderName" placeholder="Ví dụ: Bạn Nam cùng lớp" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-stone-700 mb-1">Lời nhắn gửi:</label>
+<textarea class="w-full px-3 py-2 text-sm rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-ptit-orange bg-white" id="senderMessage" placeholder="Chúc mừng Huy tốt nghiệp xuất sắc, luôn thành công trên chặng đường mới nhé!" required="" rows="3"></textarea>
+</div>
+<button class="w-full py-2.5 bg-ptit-orange hover:bg-orange-600 text-white font-bold rounded-lg shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 text-sm" type="submit">
+<svg aria-hidden="true" class="lucide lucide-sparkles w-4 h-4" data-lucide="sparkles" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>
+<span>Gửi Lời Chúc Mừng</span>
+</button>
+</form>
+</div>
+</div>
+<!-- JAVASCRIPT: 3D GATEFOLD DUAL-WING ENGINE & INTERACTIONS -->
+<script>
+  // Initialize Lucide Icons
+  lucide.createIcons();
+
+  // Core DOM Elements
+  const scrollTrack = document.getElementById('scrollTrack');
+  const bookContainer = document.getElementById('bookContainer');
+  const leftGateFlap = document.getElementById('leftGateFlap');
+  const rightGateFlap = document.getElementById('rightGateFlap');
+  const leftFlapShadow = document.getElementById('leftFlapShadow');
+  const rightFlapShadow = document.getElementById('rightFlapShadow');
+  const centerSeamShadow = document.getElementById('centerSeamShadow');
+  const elasticBand = document.getElementById('elasticBand');
+  const centerMedallion = document.getElementById('centerMedallion');
+  const spineGutterShadow = document.getElementById('spineGutterShadow');
+  const progressBar = document.getElementById('progressBar');
+  const progressPercent = document.getElementById('progressPercent');
+  const instructionText = document.getElementById('instructionText');
+  const btnToggleLabel = document.getElementById('btnToggleLabel');
+  const resetBookBtn = document.getElementById('resetBookBtn');
+  const foldBookBtn = document.getElementById('foldBookBtn');
+  const celebrateBtn = document.getElementById('celebrateBtn');
+  const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+  const soundText = document.getElementById('soundText');
+
+  // Interactive Map Elements
+  const zoneInfoCard = document.getElementById('zoneInfoCard');
+  const infoTitle = document.getElementById('infoTitle');
+  const infoDesc = document.getElementById('infoDesc');
+  const activeZoneBadge = document.getElementById('activeZoneBadge');
+  const zoneBadgeText = document.getElementById('zoneBadgeText');
+  const targetHoiTruongA2 = document.getElementById('targetHoiTruongA2');
+
+  let audioEnabled = true;
+  let audioCtx = null;
+  let hasPlayedOpenSound = false;
+  let hasTriggeredConfetti = false;
+
+  // Web Audio Synthesizer for Authentic Leather / Paper SFX
+  function initAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playGateUnlatchSound() {
+    if (!audioEnabled) return;
+    try {
+      initAudio();
+      // Metallic unlatch click
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.14);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.14);
+    } catch(e) {}
+  }
+
+  function playPageSpreadSound() {
+    if (!audioEnabled) return;
+    try {
+      initAudio();
+      // Soft leather creak / paper unfold whoosh
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(420, audioCtx.currentTime + 0.22);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.005, audioCtx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.25);
+    } catch(e) {}
+  }
+
+  function playSuccessChime() {
+    if (!audioEnabled) return;
+    try {
+      initAudio();
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((f, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, audioCtx.currentTime + i * 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.08 + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + i * 0.08);
+        osc.stop(audioCtx.currentTime + i * 0.08 + 0.35);
+      });
+    } catch(e) {}
+  }
+
+  // Toggle Sound Button
+  toggleSoundBtn.addEventListener('click', () => {
+    audioEnabled = !audioEnabled;
+    soundText.innerText = audioEnabled ? 'Âm thanh: Bật' : 'Âm thanh: Tắt';
+    toggleSoundBtn.classList.toggle('text-stone-500', !audioEnabled);
+    toggleSoundBtn.classList.toggle('text-stone-300', audioEnabled);
+  });
+
+  // =========================================================================
+  // 3D GATEFOLD DUAL-WING MOTOR
+  // Left Wing: rotateY( 0deg -> -180deg ) around LEFT edge
+  // Right Wing: rotateY( 0deg -> +180deg ) around RIGHT edge
+  // Medallion & Band: Fade and stretch out during 0% -> 25%
+  // =========================================================================
+  function renderGatefold(progress) {
+    const pct = Math.round(progress * 100);
+    progressBar.style.width = `${progress * 100}%`;
+    progressPercent.innerText = `${pct}%`;
+
+    // Phase 1: Medallion & Band Release (0.0 to 0.25)
+    if (progress < 0.25) {
+      const bandPhase = progress / 0.25;
+      const bandScale = 1 + bandPhase * 0.25;
+      const bandOpacity = 1 - bandPhase;
+      elasticBand.style.opacity = bandOpacity.toString();
+      elasticBand.style.transform = `translateY(-50%) scaleX(${bandScale})`;
+      centerMedallion.style.opacity = bandOpacity.toString();
+      centerMedallion.style.transform = `translate(-50%, -50%) scale(${1 + bandPhase * 0.3}) rotate(${bandPhase * 25}deg)`;
+      centerSeamShadow.style.opacity = (1 - bandPhase).toString();
+    } else {
+      elasticBand.style.opacity = '0';
+      centerMedallion.style.opacity = '0';
+      centerSeamShadow.style.opacity = '0';
+    }
+
+    // Phase 2: Symmetrical 3D Gatefold Wing Rotations
+    // Left Wing: 0deg to -180deg
+    // Right Wing: 0deg to 180deg
+    const leftRotY = progress * -180;
+    const rightRotY = progress * 180;
+    leftGateFlap.style.transform = `rotateY(${leftRotY}deg)`;
+    rightGateFlap.style.transform = `rotateY(${rightRotY}deg)`;
+
+    // Shading on the flaps during swing to simulate realistic lighting
+    const shadowIntensity = Math.sin(progress * Math.PI) * 0.75;
+    leftFlapShadow.style.backgroundColor = `rgba(0, 0, 0, ${shadowIntensity})`;
+    rightFlapShadow.style.backgroundColor = `rgba(0, 0, 0, ${shadowIntensity})`;
+
+    // Spine gutter depth inside the revealed book
+    if (progress > 0.15 && progress < 0.95) {
+      spineGutterShadow.style.opacity = (Math.sin(progress * Math.PI) * 0.9).toString();
+    } else {
+      spineGutterShadow.style.opacity = '0.35';
+    }
+
+    // Enable/Disable pointer events on the gate flaps once folded open past 90 degrees
+    if (progress >= 0.5) {
+      leftGateFlap.style.pointerEvents = 'none';
+      rightGateFlap.style.pointerEvents = 'none';
+      leftGateFlap.style.opacity = Math.max(0, 1 - (progress - 0.5) * 2.2).toString();
+      rightGateFlap.style.opacity = Math.max(0, 1 - (progress - 0.5) * 2.2).toString();
+    } else {
+      leftGateFlap.style.pointerEvents = 'auto';
+      rightGateFlap.style.pointerEvents = 'auto';
+      leftGateFlap.style.opacity = '1';
+      rightGateFlap.style.opacity = '1';
+    }
+
+    // Sound & Confetti triggers at appropriate milestones
+    if (progress > 0.1 && !hasPlayedOpenSound) {
+      hasPlayedOpenSound = true;
+      playGateUnlatchSound();
+      setTimeout(playPageSpreadSound, 250);
+    } else if (progress < 0.05) {
+      hasPlayedOpenSound = false;
+    }
+
+    if (progress > 0.75 && !hasTriggeredConfetti) {
+      hasTriggeredConfetti = true;
+      triggerConfetti();
+      playSuccessChime();
+    } else if (progress < 0.2) {
+      hasTriggeredConfetti = false;
+    }
+
+    // UI Instruction Label updates
+    if (progress >= 0.8) {
+      instructionText.innerText = "Sổ đã mở 100%! Khám phá bản đồ PTIT & gửi lời chúc cho Huy";
+      btnToggleLabel.innerText = "Đóng sổ";
+    } else if (progress > 0.15) {
+      instructionText.innerText = "Đang lật mở 2 cánh thiệp 3D...";
+      btnToggleLabel.innerText = "Mở hết sổ";
+    } else {
+      instructionText.innerText = "Cuộn xuống hoặc nhấn vào sổ để mở thiệp 3D";
+      btnToggleLabel.innerText = "Mở sổ thiệp 3D";
+    }
+  }
+
+  // Scroll Engine Handler
+  function updateBookOnScroll() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const currentScroll = Math.max(0, Math.min(window.scrollY, maxScroll));
+    const progress = maxScroll > 0 ? currentScroll / maxScroll : 0;
+    renderGatefold(progress);
+  }
+
+  window.addEventListener('scroll', updateBookOnScroll, { passive: true });
+  updateBookOnScroll(); // Initial pass (Progress = 0, fully closed)
+
+  // =========================================================================
+  // SMOOTH OPEN / CLOSE CLICK CONTROLS
+  // =========================================================================
+  function openBookFully() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    window.scrollTo({
+      top: maxScroll,
+      behavior: 'smooth'
+    });
+    playGateUnlatchSound();
+  }
+
+  function closeBookFully() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    playPageSpreadSound();
+  }
+
+  function toggleBook() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY > maxScroll * 0.4) {
+      closeBookFully();
+    } else {
+      openBookFully();
+    }
+  }
+
+  // Click on book flaps or center medallion when closed opens the book
+  leftGateFlap.addEventListener('click', (e) => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY < maxScroll * 0.3) {
+      openBookFully();
+    }
+  });
+
+  rightGateFlap.addEventListener('click', (e) => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY < maxScroll * 0.3) {
+      openBookFully();
+    }
+  });
+
+  centerMedallion.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openBookFully();
+  });
+
+  resetBookBtn.addEventListener('click', toggleBook);
+  foldBookBtn.addEventListener('click', closeBookFully);
+
+  // =========================================================================
+  // NATURAL 3D MOUSE PARALLAX TILT
+  // =========================================================================
+  window.addEventListener('mousemove', (e) => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+    
+    const { innerWidth, innerHeight } = window;
+    const xNorm = (e.clientX / innerWidth) - 0.5;
+    const yNorm = (e.clientY / innerHeight) - 0.5;
+
+    // Subtle natural tilt responsive to cursor
+    const tiltIntensity = 1 - (progress * 0.5);
+    const rotX = -yNorm * 9 * tiltIntensity;
+    const rotY = xNorm * 11 * tiltIntensity;
+
+    bookContainer.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${1 + 0.01 * tiltIntensity})`;
+  });
+
+  window.addEventListener('mouseleave', () => {
+    bookContainer.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+  });
+
+  // =========================================================================
+  // INTERACTIVE CAMPUS MAP ZONES
+  // =========================================================================
+  const mapZones = document.querySelectorAll('.map-zone');
+  mapZones.forEach(zone => {
+    zone.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const title = zone.getAttribute('data-title');
+      const desc = zone.getAttribute('data-desc');
+
+      if (title && desc) {
+        infoTitle.innerText = title;
+        infoDesc.innerText = desc;
+        zoneBadgeText.innerText = `Đang xem: ${title}`;
+        activeZoneBadge.classList.remove('hidden');
+
+        zoneInfoCard.classList.add('ring-2', 'ring-ptit-orange');
+        setTimeout(() => zoneInfoCard.classList.remove('ring-2', 'ring-ptit-orange'), 500);
+
+        playPageSpreadSound();
+      }
+    });
+
+    zone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        zone.click();
+      }
+    });
+  });
+
+  // Target Click (Hội trường nhà A2)
+  targetHoiTruongA2.addEventListener('click', (e) => {
+    e.stopPropagation();
+    triggerConfetti();
+    playSuccessChime();
+  });
+
+  // Direction Button Click
+  document.getElementById('directMeBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    alert("Chỉ đường tới Hội trường A2: Từ cổng chính học viện trên đường Trần Phú, bạn đi thẳng qua vườn hoa PTIT, rẽ phải ngang qua toà A1, Hội trường A2 nằm ngay trước mắt bạn!");
+  });
+
+  // Confetti Cannon
+  function triggerConfetti() {
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 90,
+        spread: 85,
+        origin: { y: 0.6 },
+        colors: ['#D35400', '#F39C12', '#40513B', '#C0392B', '#27AE60']
+      });
+    }
+  }
+  celebrateBtn.addEventListener('click', () => {
+    triggerConfetti();
+    playSuccessChime();
+  });
+
+  // Modal Greeting Logic
+  const greetingModal = document.getElementById('greetingModal');
+  function triggerGreetingModal() {
+    greetingModal.classList.remove('hidden');
+  }
+  function closeGreetingModal() {
+    greetingModal.classList.add('hidden');
+  }
+  function handleSendGreeting(e) {
+    e.preventDefault();
+    const name = document.getElementById('senderName').value;
+    closeGreetingModal();
+    triggerConfetti();
+    playSuccessChime();
+    alert(`Cảm ơn ${name}! Lời chúc tốt nghiệp tuyệt vời của bạn đã được lưu lại thành công! ❤️`);
+    document.getElementById('greetingForm').reset();
+  }
+</script>
+</body></html>
