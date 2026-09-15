@@ -88,28 +88,37 @@ campusMap.addEventListener("click", () => {
 
 greetingOpen.addEventListener("click", () => greetingDialog.showModal());
 
-greetingForm.addEventListener("submit", (event) => {
-  if (event.submitter?.value === "cancel") return;
+greetingForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!greetingForm.reportValidity()) return;
 
-  const entry = {
-    name: document.querySelector("#senderName").value.trim(),
-    message: document.querySelector("#senderMessage").value.trim(),
-    savedAt: new Date().toISOString(),
-  };
-  let previous = [];
+  const submitBtn = greetingForm.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Đang gửi...";
+
   try {
-    const stored = JSON.parse(localStorage.getItem("huy-graduation-wishes") || "[]");
-    previous = Array.isArray(stored) ? stored : [];
+    const data = new FormData(greetingForm);
+    data.append("from_name", document.querySelector("#senderName").value.trim());
+
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: data,
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      formStatus.textContent = "Đã gửi lời chúc thành công!";
+      greetingForm.reset();
+      window.setTimeout(() => greetingDialog.close(), 900);
+    } else {
+      formStatus.textContent = "Có lỗi xảy ra, thử lại sau.";
+    }
   } catch {
-    localStorage.removeItem("huy-graduation-wishes");
+    formStatus.textContent = "Có lỗi xảy ra, thử lại sau.";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Gửi lời chúc";
   }
-  previous.push(entry);
-  localStorage.setItem("huy-graduation-wishes", JSON.stringify(previous.slice(-50)));
-  formStatus.textContent = "Đã lưu lời chúc trên thiết bị này.";
-  greetingForm.reset();
-  window.setTimeout(() => greetingDialog.close(), 900);
 });
 
 document.addEventListener("visibilitychange", () => {

@@ -106,7 +106,7 @@
                 <span class="map-caption"><strong>Hội trường nhà A2</strong><small>Chạm để xem chỉ đường</small></span>
                   </button>
                   <div class="you-are-here">
-                    <span aria-hidden="true">↙</span>
+                    <span aria-hidden="true">↖</span>
                     <strong>Tui ở đây nha!</strong>
                     <small>Hội trường nhà A2</small>
                   </div>
@@ -135,7 +135,9 @@
     </main>
 
     <dialog class="greeting-dialog" id="greetingDialog">
-      <form method="dialog" id="greetingForm">
+      <form id="greetingForm">
+        <input type="hidden" name="access_key" value="7792a5c0-934f-4344-9942-6702fc590314" />
+        <input type="hidden" name="subject" value="Lời chúc từ thiệp tốt nghiệp Huy Nguyễn" />
         <button class="dialog-close" value="cancel" type="submit" formnovalidate aria-label="Đóng">×</button>
         <p class="eyebrow">A note for Huy</p>
         <h2>Gửi một lời chúc</h2>
@@ -147,8 +149,8 @@
           Lời nhắn
           <textarea id="senderMessage" name="message" required maxlength="500" rows="4"></textarea>
         </label>
-        <p class="form-note">Lời chúc được lưu trên thiết bị này.</p>
-        <button class="button button-primary button-full" value="default" type="submit">Lưu lời chúc</button>
+        <p class="form-note">Lời chúc sẽ được gửi đến Huy qua email.</p>
+        <button class="button button-primary button-full" type="submit">Gửi lời chúc</button>
         <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
     </dialog>
