@@ -124,6 +124,7 @@ mapSheet?.addEventListener("pointermove", (e) => {
 mapSheet?.addEventListener("pointerleave", () => gsap.to(".map-sheet-body svg", { rotateX: 0, rotateY: 0, duration: 0.6, ease: "elastic.out(1,.6)" }));
 
 greetingOpen.addEventListener("click", () => greetingDialog.showModal());
+document.querySelector("#greetingClose")?.addEventListener("click", () => greetingDialog.close());
 
 const bookStage = document.querySelector("#bookStage");
 const scrapSheet = document.querySelector(".scrapbook-sheet");
