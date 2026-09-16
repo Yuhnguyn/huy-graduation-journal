@@ -205,21 +205,46 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .portrait-sticker {
   position: relative;
   display: grid;
-  width: min(100%, 260px);
-  height: 78%;
-  place-items: end center;
-  filter: drop-shadow(0 8px 4px rgba(74,28,9,.28));
+  width: min(100%, 250px);
+  height: 82%;
+  place-items: center;
+  padding: 12px 8px 8px;
+  filter: drop-shadow(0 10px 16px rgba(50,22,10,.32));
 }
 .portrait-sticker::before {
   content: "";
   position: absolute;
-  inset: 12% 6% 3%;
+  inset: 4% 2% 0% 2%;
   z-index: -1;
-  border-radius: 48% 48% 35% 35%;
-  background: #fffdf0;
-  transform: rotate(-2deg);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fffdf6 0%, #f7efdd 100%);
+  border: 1.5px solid rgba(190, 150, 100, 0.4);
+  box-shadow: inset 0 0 15px rgba(120, 80, 40, 0.08), 0 6px 14px rgba(0,0,0,0.18);
+  transform: rotate(-2.2deg);
 }
-.portrait-sticker img { display: block; width: 100%; height: 100%; object-fit: contain; filter: saturate(1.08) contrast(1.03); }
+.portrait-sticker::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 22%;
+  width: 56%;
+  height: 20px;
+  background: repeating-linear-gradient(45deg, rgba(215, 140, 50, 0.85), rgba(215, 140, 50, 0.85) 10px, rgba(235, 175, 80, 0.85) 10px, rgba(235, 175, 80, 0.85) 20px);
+  border: 1px dashed rgba(160, 100, 30, 0.4);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+  transform: rotate(-3.5deg);
+  z-index: 5;
+  opacity: 0.92;
+}
+.portrait-sticker img {
+  display: block;
+  width: 120%;
+  height: 120%;
+  object-fit: contain;
+  transform: translateY(2px) scale(1.22);
+  filter: saturate(1.08) contrast(1.04) drop-shadow(0 6px 10px rgba(0,0,0,0.26));
+  z-index: 2;
+}
 .grad-cap { position: absolute; z-index: 3; top: 1%; left: 20%; width: 64%; height: 22%; transform: rotate(9deg); }
 .grad-cap::before { content: ""; position: absolute; inset: 0 5% 32%; background: #1b263d; clip-path: polygon(50% 0, 100% 40%, 52% 100%, 0 40%); box-shadow: inset 0 -8px #e0a31d; }
 .grad-cap::after { content: ""; position: absolute; left: 28%; right: 22%; bottom: 0; height: 45%; border-radius: 0 0 45% 45%; background: #202942; }

@@ -18,8 +18,18 @@ const greetingForm = document.querySelector("#greetingForm");
 const formStatus = document.querySelector("#formStatus");
 
 const guestNameEl = document.querySelector(".guest-name");
-const urlName = new URLSearchParams(window.location.search).get("name");
-if (guestNameEl && urlName) guestNameEl.textContent = decodeURIComponent(urlName);
+const senderNameInput = document.querySelector("#senderName");
+const searchParams = new URLSearchParams(window.location.search);
+const rawName = searchParams.get("name") || searchParams.get("guest") || searchParams.get("to");
+
+if (rawName && rawName.trim()) {
+  let cleanName = rawName.trim();
+  try {
+    cleanName = decodeURIComponent(cleanName);
+  } catch {}
+  if (guestNameEl) guestNameEl.textContent = cleanName;
+  if (senderNameInput) senderNameInput.value = cleanName;
+}
 
 const scene = new BookScene(canvas);
 const systemReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
