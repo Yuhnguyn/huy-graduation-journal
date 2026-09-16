@@ -216,6 +216,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   object-fit: contain;
   filter: saturate(1.08) contrast(1.03);
 }
+.name-sticker { margin: -7px 0 0; padding: 2px 9px 5px; color: #fff178; background: #df3f28; border: 3px solid #ffdd55; transform: rotate(-3deg); font-size: clamp(18px, 2.5vw, 33px); font-weight: 1000; font-style: italic; line-height: 1; text-shadow: 2px 2px #a72c20; box-shadow: 3px 4px 0 rgba(112,40,11,.25); }
 .class-sticker { margin: 9px 0 0; padding: 3px 8px; color: #87301f; background: rgba(255,235,146,.76); font-size: clamp(8px, .9vw, 12px); font-weight: 900; letter-spacing: .1em; text-transform: uppercase; transform: rotate(1deg); }
 .sparkle { position: absolute; z-index: 3; color: #fff276; font-size: clamp(24px, 4vw, 50px); text-shadow: 0 0 8px #fff, 0 3px #df7d22; }
 .sparkle-one { top: 18%; left: -4%; }
